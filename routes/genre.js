@@ -10,7 +10,7 @@ router.get('/init', (req, res) => {
         .then((genres) => {
             if (genres.length > 0) {
                 res.status(409).json({
-                    message: 'Genres database already exist',
+                    message: 'Genres database already exists',
                 });
             } else {
                 Genre.insertMany(init.genres)

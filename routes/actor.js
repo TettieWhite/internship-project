@@ -10,7 +10,7 @@ router.get('/init', (req, res) => {
         .then((actors) => {
             if (actors.length > 0) {
                 res.status(409).json({
-                    message: 'Actors database already exist',
+                    message: 'Actors database already exists',
                 });
             } else {
                 Actor.insertMany(init.actors)

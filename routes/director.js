@@ -10,7 +10,7 @@ router.get('/init', (req, res) => {
         .then((directors) => {
             if (directors.length > 0) {
                 res.status(409).json({
-                    message: 'Directors database already exist',
+                    message: 'Directors database already exists',
                 });
             } else {
                 Director.insertMany(init.directors)

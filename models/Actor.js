@@ -1,10 +1,16 @@
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const actor = new Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'Name is required'],
     },
 });
 
-module.exports = model('Actor', actor);
+actor.path('name').validate(async (name) => {
+    const nameCount = await mongoose.models.Actor.countDocuments({ name });
+    return !nameCount;
+}, 'Actor with such name already exists');
+
+module.exports = mongoose.model('Actor', actor);

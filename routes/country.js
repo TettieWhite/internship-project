@@ -10,7 +10,7 @@ router.get('/init', (req, res) => {
         .then((countries) => {
             if (countries.length > 0) {
                 res.status(409).json({
-                    message: 'Countries database already exist',
+                    message: 'Countries database already exists',
                 });
             } else {
                 Country.insertMany(init.countries)
