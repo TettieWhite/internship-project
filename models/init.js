@@ -1,4 +1,8 @@
 const Country = require('../models/Country');
+const City = require('../models/City');
+const Actor = require('../models/Actor');
+const Director = require('../models/Director');
+const Genre = require('../models/Genre');
 
 const countries = [
     new Country({ name: 'Belarus' }),
@@ -7,8 +11,6 @@ const countries = [
     new Country({ name: 'France' }),
     new Country({ name: 'Italy' }),
 ];
-
-const City = require('../models/City');
 
 const cities = [
     new City({
@@ -37,8 +39,6 @@ const cities = [
     }),
 ];
 
-const Actor = require('../models/Actor');
-
 const actors = [
     new Actor({ name: 'Timothée Chalamet' }),
     new Actor({ name: 'Rebecca Ferguson' }),
@@ -46,15 +46,11 @@ const actors = [
     new Actor({ name: 'Tom Hardy' }),
 ];
 
-const Director = require('../models/Director');
-
 const directors = [
     new Director({ name: 'Denis Villeneuve' }),
     new Director({ name: 'Andy Serkis' }),
     new Director({ name: 'Rian Johnson' }),
 ];
-
-const Genre = require('../models/Genre');
 
 const genres = [
     new Genre({ name: 'Action' }),

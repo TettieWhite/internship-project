@@ -4,30 +4,30 @@ const router = Router();
 const Actor = require('../models/Actor');
 const init = require('../models/init');
 
-router.get('/init', (req, res) => {
-    Actor.find()
-        .exec()
-        .then((actors) => {
-            if (actors.length > 0) {
-                res.status(409).json({
-                    message: 'Actors database already exists',
-                });
-            } else {
-                Actor.insertMany(init.actors)
-                    .then((result) => {
-                        console.log(result);
-                        res.status(201).json({
-                            actors: result,
-                        });
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        res.status(500).json({
-                            error: error,
-                        });
-                    });
-            }
+router.post('/init', async (req, res) => {
+    const actors = await Actor.find();
+
+    if (actors.length > 0) {
+        res.status(409).send({
+            error: 'Actors database already exists',
         });
+    } else {
+        Actor.insertMany(init.actors)
+            .then((result) => {
+                console.log(result);
+                res.status(201).send({
+                    data: result,
+                    success:
+                        'Actors database has been successfully initialized',
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).send({
+                    error: error.message,
+                });
+            });
+    }
 });
 
 router.post('/add', (req, res) => {
@@ -38,84 +38,91 @@ router.post('/add', (req, res) => {
         .save()
         .then((result) => {
             console.log(result);
-            res.status(201).json({
-                addedActor: actor,
+            res.status(201).send({
+                data: actor,
+                success: 'Actor has been successfully added',
             });
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({
-                error: error,
+            res.status(500).send({
+                error: error.message,
             });
         });
 });
 
-router.get('/list', (req, res) => {
-    Actor.find()
-        .exec()
-        .then((result) => {
-            res.status(200).json({
-                actors: result,
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).json({
-                error: error,
-            });
-        });
-});
-
-router.get('/:id', (req, res) => {
-    const _id = req.params.id;
-    Actor.findById(_id)
-        .then((result) => {
-            if (result) {
-                res.status(200).json({
-                    actor: result,
+router.get('/:id?', (req, res) => {
+    const id = req.params.id;
+    if (id) {
+        Actor.findById(id)
+            .then((result) => {
+                if (result) {
+                    res.status(200).send({
+                        data: result,
+                        success: 'Actor has been successfully found',
+                    });
+                } else {
+                    res.status(404).send({
+                        error: "Actor for such id doesn't exist",
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).send({
+                    error: error.message,
                 });
-            } else {
-                res.status(404).json({
-                    message: "Actor for such id doesn't exist",
-                });
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).json({
-                error: error,
             });
-        });
+    } else {
+        Actor.find()
+            .exec()
+            .then((result) => {
+                res.status(200).send({
+                    data: result,
+                    success: 'List of actors has been successfully found',
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).send({
+                    error: error.message,
+                });
+            });
+    }
 });
 
 router.patch('/:id', (req, res) => {
-    const _id = req.params.id;
-    Actor.findByIdAndUpdate(_id, { $set: req.body }, { new: true })
+    const id = req.params.id;
+    Actor.findByIdAndUpdate(id, { $set: req.body }, { new: true })
         .exec()
         .then((result) => {
-            res.status(200).json(result);
+            res.status(200).send({
+                data: result,
+                success: 'Actor has been successfully updated',
+            });
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({
-                error: error,
+            res.status(500).send({
+                error: error.message,
             });
         });
 });
 
 router.delete('/:id', (req, res) => {
-    const _id = req.params.id;
-    Actor.findByIdAndDelete(_id)
+    const id = req.params.id;
+    Actor.findByIdAndDelete(id)
         .exec()
         .then((result) => {
-            res.status(200).json({
-                deletedActor: result,
+            res.status(200).send({
+                data: result,
+                success: 'Actor has been successfully deleted',
             });
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({
-                error: error,
+            res.status(500).send({
+                error: error.message,
             });
         });
 });

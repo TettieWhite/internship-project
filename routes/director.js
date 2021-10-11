@@ -4,30 +4,30 @@ const router = Router();
 const Director = require('../models/Director');
 const init = require('../models/init');
 
-router.get('/init', (req, res) => {
-    Director.find()
-        .exec()
-        .then((directors) => {
-            if (directors.length > 0) {
-                res.status(409).json({
-                    message: 'Directors database already exists',
-                });
-            } else {
-                Director.insertMany(init.directors)
-                    .then((result) => {
-                        console.log(result);
-                        res.status(201).json({
-                            directors: result,
-                        });
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        res.status(500).json({
-                            error: error,
-                        });
-                    });
-            }
+router.post('/init', async (req, res) => {
+    const directors = await Director.find();
+
+    if (directors.length > 0) {
+        res.status(409).send({
+            error: 'Directors database already exists',
         });
+    } else {
+        Director.insertMany(init.directors)
+            .then((result) => {
+                console.log(result);
+                res.status(201).send({
+                    data: result,
+                    success:
+                        'Directors database has been successfully initialized',
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).send({
+                    error: error.message,
+                });
+            });
+    }
 });
 
 router.post('/add', (req, res) => {
@@ -38,84 +38,91 @@ router.post('/add', (req, res) => {
         .save()
         .then((result) => {
             console.log(result);
-            res.status(201).json({
-                addedDirector: director,
+            res.status(201).send({
+                data: director,
+                success: 'Director has been successfully added',
             });
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({
-                error: error,
+            res.status(500).send({
+                error: error.message,
             });
         });
 });
 
-router.get('/list', (req, res) => {
-    Director.find()
-        .exec()
-        .then((result) => {
-            res.status(200).json({
-                directors: result,
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).json({
-                error: error,
-            });
-        });
-});
-
-router.get('/:id', (req, res) => {
-    const _id = req.params.id;
-    Director.findById(_id)
-        .then((result) => {
-            if (result) {
-                res.status(200).json({
-                    director: result,
+router.get('/:id?', (req, res) => {
+    const id = req.params.id;
+    if (id) {
+        Director.findById(id)
+            .then((result) => {
+                if (result) {
+                    res.status(200).send({
+                        data: result,
+                        success: 'Director has been successfully found',
+                    });
+                } else {
+                    res.status(404).send({
+                        error: "Director for such id doesn't exist",
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).send({
+                    error: error.message,
                 });
-            } else {
-                res.status(404).json({
-                    message: "Director for such id doesn't exist",
-                });
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).json({
-                error: error,
             });
-        });
+    } else {
+        Director.find()
+            .exec()
+            .then((result) => {
+                res.status(200).send({
+                    data: result,
+                    success: 'List of directors has been successfully found',
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).send({
+                    error: error.message,
+                });
+            });
+    }
 });
 
 router.patch('/:id', (req, res) => {
-    const _id = req.params.id;
-    Director.findByIdAndUpdate(_id, { $set: req.body }, { new: true })
+    const id = req.params.id;
+    Director.findByIdAndUpdate(id, { $set: req.body }, { new: true })
         .exec()
         .then((result) => {
-            res.status(200).json(result);
+            res.status(200).send({
+                data: result,
+                success: 'Director has been successfully updated',
+            });
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({
-                error: error,
+            res.status(500).send({
+                error: error.message,
             });
         });
 });
 
 router.delete('/:id', (req, res) => {
-    const _id = req.params.id;
-    Director.findByIdAndDelete(_id)
+    const id = req.params.id;
+    Director.findByIdAndDelete(id)
         .exec()
         .then((result) => {
-            res.status(200).json({
-                deletedDirector: result,
+            res.status(200).send({
+                data: result,
+                success: 'Director has been successfully deleted',
             });
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({
-                error: error,
+            res.status(500).send({
+                error: error.message,
             });
         });
 });
