@@ -12,119 +12,110 @@ router.post('/init', async (req, res) => {
             error: 'Cities database already exists',
         });
     } else {
-        City.insertMany(init.cities)
-            .then((result) => {
-                console.log(result);
-                res.status(201).send({
-                    data: result,
-                    success:
-                        'Cities database has been successfully initialized',
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(500).send({
-                    error: error.message,
-                });
+        try {
+            const result = await City.insertMany(init.cities);
+
+            res.status(201).send({
+                data: result,
+                success: 'Cities database has been successfully initialized',
             });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({
+                error: error.message,
+            });
+        }
     }
 });
 
-router.post('/add', (req, res) => {
+router.post('/', async (req, res) => {
     const city = new City({
         name: req.body.name,
         countryId: req.body.countryId,
     });
-    city.save()
-        .then((result) => {
-            console.log(result);
-            res.status(201).send({
-                data: city,
-                success: 'City has been successfully added',
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).send({
-                error: error.message,
-            });
-        });
-});
+    try {
+        const result = await city.save();
 
-router.get('/:id?', (req, res) => {
-    const id = req.params.id;
-    if (id) {
-        City.findById(id)
-            .then((result) => {
-                if (result) {
-                    res.status(200).send({
-                        data: result,
-                        success: 'City has been successfully found',
-                    });
-                } else {
-                    res.status(404).send({
-                        error: "City for such id doesn't exist",
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(500).send({
-                    error: error.message,
-                });
-            });
-    } else {
-        City.find()
-            .exec()
-            .then((result) => {
-                res.status(200).send({
-                    data: result,
-                    success: 'List of cities has been successfully found',
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(500).send({
-                    error: error.message,
-                });
-            });
+        res.status(201).send({
+            data: result,
+            success: 'City has been successfully added',
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: error.message,
+        });
     }
 });
 
-router.patch('/:id', (req, res) => {
+router.get('/:id?', async (req, res) => {
     const id = req.params.id;
-    City.findByIdAndUpdate(id, { $set: req.body }, { new: true })
-        .exec()
-        .then((result) => {
+    try {
+        if (id) {
+            const result = await City.findById(id);
+
+            if (result) {
+                res.status(200).send({
+                    data: result,
+                    success: 'City has been successfully found',
+                });
+            } else {
+                res.status(404).send({
+                    error: "City for such id doesn't exist",
+                });
+            }
+        } else {
+            const result = await City.find();
+
             res.status(200).send({
                 data: result,
-                success: 'City has been successfully updated',
+                success: 'List of cities has been successfully found',
             });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).send({
-                error: error.message,
-            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: error.message,
         });
+    }
 });
 
-router.delete('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
     const id = req.params.id;
-    City.findByIdAndDelete(id)
-        .exec()
-        .then((result) => {
-            res.status(200).send({
-                data: result,
-                success: 'City has been successfelly deleted',
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).send({
-                error: error.message,
-            });
+    try {
+        const result = await City.findByIdAndUpdate(
+            id,
+            { $set: req.body },
+            { new: true }
+        );
+
+        res.status(200).send({
+            data: result,
+            success: 'City has been successfully updated',
         });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: error.message,
+        });
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const result = await City.findByIdAndDelete(id);
+
+        res.status(200).send({
+            data: result,
+            success: 'City has been successfelly deleted',
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: error.message,
+        });
+    }
 });
 
 module.exports = router;

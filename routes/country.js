@@ -12,119 +12,109 @@ router.post('/init', async (req, res) => {
             error: 'Countries database already exists',
         });
     } else {
-        Country.insertMany(init.countries)
-            .then((result) => {
-                console.log(result);
-                res.status(201).send({
-                    data: result,
-                    success:
-                        'Countries database has been successfully initialized',
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(500).send({
-                    error: error.message,
-                });
+        try {
+            const result = await Country.insertMany(init.countries);
+
+            res.status(201).send({
+                data: result,
+                success: 'Countries database has been successfully initialized',
             });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({
+                error: error.message,
+            });
+        }
     }
 });
 
-router.post('/add', (req, res) => {
+router.post('/', async (req, res) => {
     const country = new Country({
         name: req.body.name,
     });
-    country
-        .save()
-        .then((result) => {
-            console.log(result);
-            res.status(201).send({
-                data: country,
-                success: 'Country has been successfully added',
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).send({
-                error: error.message,
-            });
-        });
-});
+    try {
+        const result = await country.save();
 
-router.get('/:id?', (req, res) => {
-    const id = req.params.id;
-    if (id) {
-        Country.findById(id)
-            .then((result) => {
-                if (result) {
-                    res.status(200).send({
-                        data: result,
-                        success: 'Country has been successfully found',
-                    });
-                } else {
-                    res.status(404).send({
-                        error: "Country for such id doesn't exist",
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(500).send({
-                    error: error.message,
-                });
-            });
-    } else {
-        Country.find()
-            .exec()
-            .then((result) => {
-                res.status(200).send({
-                    data: result,
-                    success: 'List of countries has been successfully found',
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(500).send({
-                    error: error.message,
-                });
-            });
+        res.status(201).send({
+            data: result,
+            success: 'Country has been successfully added',
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: error.message,
+        });
     }
 });
 
-router.patch('/:id', (req, res) => {
+router.get('/:id?', async (req, res) => {
     const id = req.params.id;
-    Country.findByIdAndUpdate(id, { $set: req.body }, { new: true })
-        .exec()
-        .then((result) => {
+    try {
+        if (id) {
+            const result = await Country.findById(id);
+
+            if (result) {
+                res.status(200).send({
+                    data: result,
+                    success: 'Country has been successfully found',
+                });
+            } else {
+                res.status(404).send({
+                    error: "Country for such id doesn't exist",
+                });
+            }
+        } else {
+            const result = await Country.find();
+
             res.status(200).send({
                 data: result,
-                success: 'Country has been successfully updated',
+                success: 'List of countries has been successfully found',
             });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).send({
-                error: error.message,
-            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: error.message,
         });
+    }
 });
 
-router.delete('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
     const id = req.params.id;
-    Country.findByIdAndDelete(id)
-        .exec()
-        .then((result) => {
-            res.status(200).send({
-                data: result,
-                success: 'Country has been successfelly deleted',
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).send({
-                error: error.message,
-            });
+    try {
+        const result = await Country.findByIdAndUpdate(
+            id,
+            { $set: req.body },
+            { new: true }
+        );
+
+        res.status(200).send({
+            data: result,
+            success: 'Country has been successfully updated',
         });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: error.message,
+        });
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const result = await Country.findByIdAndDelete(id);
+
+        res.status(200).send({
+            data: result,
+            success: 'Country has been successfelly deleted',
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: error.message,
+        });
+    }
 });
 
 module.exports = router;
