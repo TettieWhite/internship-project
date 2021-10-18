@@ -11,6 +11,7 @@ const cityRouter = require('./routes/city');
 const actorRouter = require('./routes/actor');
 const directorRouter = require('./routes/director');
 const genreRouter = require('./routes/genre');
+const userRouter = require('./routes/user');
 
 app.use(express.json());
 
@@ -20,13 +21,15 @@ app.use('/cities', cityRouter);
 app.use('/actors', actorRouter);
 app.use('/directors', directorRouter);
 app.use('/genres', genreRouter);
+app.use('/user', userRouter);
 
 async function start() {
     try {
         await mongoose.connect(process.env.ATLAS_URI);
 
-        app.listen(PORT);
-        console.log('Server is running...');
+        app.listen(PORT, () => {
+            console.log('Server is running...');
+        });
     } catch (error) {
         console.log(error);
     }
