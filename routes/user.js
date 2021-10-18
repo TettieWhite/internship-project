@@ -96,21 +96,18 @@ router.patch('/:id', async (req, res) => {
     try {
         const user = await User.findById(id);
 
-        // user.email = req.body.email || user.email;
-        if (bcrypt.compare(req.body.oldPassword, user.password)) {
-            user.password = req.body.newPassword;
-        } else if (req.body.newPassword) {
-            res.status(409).send({
-                error: "Old password doesn't match",
-            });
+        if (req.body.oldPassword) {
+            if (bcrypt.compare(req.body.oldPassword, user.password)) {
+                user.password = req.body.newPassword;
+            } else if (req.body.newPassword) {
+                res.status(409).send({
+                    error: "Old password doesn't match",
+                });
+            }
         }
         Object.keys(req.body).forEach(function (prop) {
             user[prop] = req.body[prop];
         });
-        // user.role = req.body.role || user.role;
-        // user.firstName = req.body.firstName || user.firstName;
-        // user.lastName = req.body.lastName || user.lastName;
-        // user.preferences = req.body.preferences || user.preferences;
 
         const result = await User.findByIdAndUpdate(
             id,

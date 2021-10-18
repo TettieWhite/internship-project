@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
-
-const USER_ROLES = {
-    CLIENT: 'client',
-    ADMIN: 'admin',
-};
+const USER_ROLES = require('../constants/users');
 
 const user = new Schema(
     {
@@ -24,7 +20,7 @@ const user = new Schema(
         },
         role: {
             type: String,
-            enum: USER_ROLES,
+            enum: Object.values(USER_ROLES),
             default: USER_ROLES.CLIENT,
         },
         firstName: {
