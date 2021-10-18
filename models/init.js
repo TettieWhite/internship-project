@@ -69,18 +69,18 @@ const genres = [
 const users = [
     new User({
         email: 'user@mail.ru',
-        password: bcrypt.hashSync('password', 10),
+        password: bcrypt.hashSync('password', parseInt(process.env.SALT)),
         firstName: 'Katrin',
         lastName: 'Khilko',
-        preferences: cities[0]._id,
+        preferences: { cityId: cities[0]._id },
     }),
     new User({
         email: 'admin@gmail.com',
-        password: bcrypt.hashSync('admin123', 10),
+        password: bcrypt.hashSync('admin123', parseInt(process.env.SALT)),
         firstName: 'Admin',
         lastName: 'Admin',
         role: 'admin',
-        preferences: cities[0]._id,
+        preferences: { cityId: cities[0]._id },
     }),
 ];
 

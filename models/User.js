@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
+const USER_ROLES = {
+    CLIENT: 'client',
+    ADMIN: 'admin',
+};
+
 const user = new Schema(
     {
         email: {
@@ -19,8 +24,8 @@ const user = new Schema(
         },
         role: {
             type: String,
-            enum: ['client', 'admin'],
-            default: 'client',
+            enum: USER_ROLES,
+            default: USER_ROLES.CLIENT,
         },
         firstName: {
             type: String,
@@ -31,8 +36,17 @@ const user = new Schema(
             required: [true, 'Last name is required'],
         },
         preferences: {
-            type: Schema.Types.ObjectId,
-            ref: 'City',
+            cityId: {
+                type: Schema.Types.ObjectId,
+                ref: 'City',
+                validate: [
+                    async function (id) {
+                        const city = await mongoose.models.City.findById(id);
+                        return !!city;
+                    },
+                    "City with such id doesn't exist",
+                ],
+            },
         },
     },
     { timestamps: true }
@@ -46,13 +60,19 @@ user.set('toJSON', {
 });
 
 user.pre('save', async function (next) {
-    this.password = await bcrypt.hashSync(this.password, 10);
+    this.password = await bcrypt.hashSync(
+        this.password,
+        parseInt(process.env.SALT)
+    );
     next();
 });
 
 user.pre('findOneAndUpdate', async function () {
     const docToUpdate = await this.model.findOne(this.getQuery());
-    let newPassword = await bcrypt.hash(docToUpdate.password, 10);
+    let newPassword = await bcrypt.hash(
+        docToUpdate.password,
+        parseInt(process.env.SALT)
+    );
 
     this.set({ password: newPassword });
 });
@@ -61,10 +81,5 @@ user.path('email').validate(async (email) => {
     const emailCount = await mongoose.models.User.countDocuments({ email });
     return !emailCount;
 }, 'User with such email already exists');
-
-user.path('preferences').validate(async (id) => {
-    const city = await mongoose.models.City.findById(id);
-    return !!city;
-}, "City with such id doesn't exist");
 
 module.exports = mongoose.model('User', user);
