@@ -1,8 +1,10 @@
+const bcrypt = require('bcrypt');
 const Country = require('../models/Country');
 const City = require('../models/City');
 const Actor = require('../models/Actor');
 const Director = require('../models/Director');
 const Genre = require('../models/Genre');
+const User = require('../models/User');
 
 const countries = [
     new Country({ name: 'Belarus' }),
@@ -64,4 +66,22 @@ const genres = [
     new Genre({ name: 'Comedy' }),
 ];
 
-module.exports = { countries, cities, actors, directors, genres };
+const users = [
+    new User({
+        email: 'user@mail.ru',
+        password: bcrypt.hashSync('password', parseInt(process.env.SALT)),
+        firstName: 'Katrin',
+        lastName: 'Khilko',
+        preferences: { cityId: cities[0]._id },
+    }),
+    new User({
+        email: 'admin@gmail.com',
+        password: bcrypt.hashSync('admin123', parseInt(process.env.SALT)),
+        firstName: 'Admin',
+        lastName: 'Admin',
+        role: 'admin',
+        preferences: { cityId: cities[0]._id },
+    }),
+];
+
+module.exports = { countries, cities, actors, directors, genres, users };

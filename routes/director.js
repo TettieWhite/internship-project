@@ -15,7 +15,6 @@ router.post('/init', async (req, res) => {
         try {
             const result = await Director.insertMany(init.directors);
 
-            console.log(result);
             res.status(201).send({
                 data: result,
                 success: 'Directors database has been successfully initialized',
