@@ -70,33 +70,28 @@ router.post('/login', async (req, res) => {
                 error: 'Auth failed',
             });
         }
-        bcrypt.compare(req.body.password, user.password, (err, result) => {
-            if (err) {
-                res.status(401).send({
-                    error: 'Auth failed',
-                });
-            }
-            if (result) {
-                const token = jwt.sign(
-                    {
-                        email: user.email,
-                        userId: user._id,
-                    },
-                    process.env.JWT_KEY,
-                    {
-                        expiresIn: 60 * 60,
-                    }
-                );
-                res.status(200).send({
-                    data: token,
-                    success: 'User has successfully logged in',
-                });
-            } else {
-                res.status(401).send({
-                    error: 'Auth failed',
-                });
-            }
-        });
+        const result = await bcrypt.compare(req.body.password, user.password);
+
+        if (result) {
+            const token = jwt.sign(
+                {
+                    email: user.email,
+                    userId: user._id,
+                },
+                process.env.JWT_KEY,
+                {
+                    expiresIn: 60 * 60,
+                }
+            );
+            res.status(200).send({
+                data: token,
+                success: 'User has successfully logged in',
+            });
+        } else {
+            res.status(401).send({
+                error: 'Auth failed',
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).send({
@@ -114,17 +109,12 @@ router.post('/me', async (req, res) => {
                 error: 'User is not logged in',
             });
         }
-        jwt.verify(token, process.env.JWT_KEY, async (err, user) => {
-            if (err) {
-                res.status(403).send({
-                    error: 'Token is invalid',
-                });
-            }
-            const result = await User.findOne({ email: user.email });
-            res.status(200).send({
-                data: result,
-                success: 'Autorizated user info returned successfully',
-            });
+        const user = jwt.verify(token, process.env.JWT_KEY);
+
+        const result = await User.findOne({ email: user.email });
+        res.status(200).send({
+            data: result,
+            success: 'Autorizated user info returned successfully',
         });
     } catch (error) {
         console.log(error);
