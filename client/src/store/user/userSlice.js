@@ -11,6 +11,7 @@ const initialState = {
       cityId: '',
     },
   },
+  isAuth: null,
   loadingStatus: false,
 };
 
@@ -30,11 +31,17 @@ const userSlice = createSlice({
       state.user.preferences.cityId = payload.preferences.cityId;
     },
     resetUser: (state) => {
-      state.user = initialState;
+      state.user = initialState.user;
+    },
+    setAuth: (state, { payload }) => {
+      state.isAuth = payload.isAuth;
+    },
+    resetAuth: (state) => {
+      state.isAuth = initialState.isAuth;
     },
   },
 });
 
-export const { setUserLoadingStatus, setUser, resetUser } = userSlice.actions;
+export const userActions = userSlice.actions;
 
 export default userSlice.reducer;

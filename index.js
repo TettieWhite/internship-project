@@ -13,6 +13,11 @@ const directorRouter = require('./routes/director');
 const genreRouter = require('./routes/genre');
 const userRouter = require('./routes/user');
 
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
 app.use(express.json());
 
 app.use('/', indexRouter);
