@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import requestApi from '../../helpers/requestApi';
 
 const initialState = {
   user: {
@@ -43,5 +44,34 @@ const userSlice = createSlice({
 });
 
 export const userActions = userSlice.actions;
+
+export const fetchUserData = async (dispatch) => {
+  const response = await requestApi('/user/me', 'POST');
+  if (!response.error) {
+    dispatch(
+      userActions.setAuth({
+        isAuth: true,
+      })
+    );
+    dispatch(
+      userActions.setUser({
+        id: response.data._id,
+        email: response.data.email,
+        role: response.data.role,
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        preferences: {
+          cityId: response.data.preferences.cityId,
+        },
+      })
+    );
+  } else {
+    dispatch(
+      userActions.setAuth({
+        isAuth: false,
+      })
+    );
+  }
+};
 
 export default userSlice.reducer;
