@@ -17,13 +17,13 @@ export default async function requestApi(url, method, data = null) {
     });
 
     if (!response.ok) {
-      console.log(response.error);
+      throw new Error(response.error);
     }
 
     const result = await response.json();
-    return result;
+    return { data: result.data, error: null };
   } catch (error) {
     console.log(error);
-    return error;
+    return { data: null, error };
   }
 }
