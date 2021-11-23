@@ -15,7 +15,7 @@ function App() {
       'token',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthdHJpbkBnbWFpbC5jb20iLCJ1c2VySWQiOiI2MTcwNGFjMjBjMjViYTRmOGYyZDNjYzQiLCJpYXQiOjE2MzczMjU5NzQsImV4cCI6MTYzNzMyOTU3NH0.ZCFmtmPxS2EAVT3389nIt-P5kbkxU385TtSibVt2R74'
     );
-    fetchUserData()(dispatch);
+    dispatch(fetchUserData());
   });
 
   return (

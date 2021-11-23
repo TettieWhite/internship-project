@@ -1,4 +1,4 @@
-export default async function requestApi(url, method, data = null) {
+export default async function requestApi(url, method = 'GET', data = null) {
   try {
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${localStorage.getItem('token')}`);
