@@ -28,6 +28,8 @@
                 "endOfLine": "auto"
             }
         ],
+        "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+        "no-console": "off",
         "no-param-reassign": [2, {"props": false}],
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
     }

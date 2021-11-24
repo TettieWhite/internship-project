@@ -1,28 +1,23 @@
-import React from 'react';
-import { createTheme, ThemeProvider } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { ThemeProvider } from '@material-ui/core';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import './App.scss';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#66737f',
-      light: '#c4c4c4',
-    },
-    secondary: {
-      main: '#eeb955',
-    },
-  },
-  typography: {
-    fontFamily: 'Lato',
-    button: {
-      textTransform: 'none',
-    },
-  },
-});
+import { fetchUserData } from './store/user/userSlice';
+import theme from './theme';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    localStorage.setItem(
+      'token',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthdHJpbkBnbWFpbC5jb20iLCJ1c2VySWQiOiI2MTcwNGFjMjBjMjViYTRmOGYyZDNjYzQiLCJpYXQiOjE2MzczMjU5NzQsImV4cCI6MTYzNzMyOTU3NH0.ZCFmtmPxS2EAVT3389nIt-P5kbkxU385TtSibVt2R74'
+    );
+    dispatch(fetchUserData());
+  });
+
   return (
     <ThemeProvider theme={theme}>
       <Header />

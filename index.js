@@ -12,7 +12,9 @@ const actorRouter = require('./routes/actor');
 const directorRouter = require('./routes/director');
 const genreRouter = require('./routes/genre');
 const userRouter = require('./routes/user');
+const middleware = require('./middleware');
 
+app.use(middleware);
 app.use(express.json());
 
 app.use('/', indexRouter);
