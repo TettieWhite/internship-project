@@ -7,9 +7,20 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import useStyles from './HeaderStyles';
+import Login from './login/Login';
 
 export default function Header() {
   const classes = useStyles();
+
+  const [show, showModal] = React.useState(false);
+  const handleOpen = () => {
+    showModal(true);
+    document.body.style.overflow = 'hidden';
+  };
+  const handleClose = () => {
+    showModal(false);
+    document.body.removeAttribute('style');
+  };
 
   return (
     <header>
@@ -30,9 +41,11 @@ export default function Header() {
             variant='outlined'
             color='secondary'
             className={classes.loginBtn}
+            onClick={handleOpen}
           >
             Sign in
           </Button>
+          <Login show={show} onClose={handleClose} />
         </Toolbar>
       </AppBar>
     </header>
