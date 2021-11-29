@@ -11,11 +11,10 @@ const useStyles = makeStyles((theme) => ({
   },
   modal: {
     position: 'absolute',
-    top: '148px',
+    top: '50%',
     left: '50%',
-    transform: 'translateX(-50%)',
+    transform: 'translate(-50%, -50%)',
     width: '410px',
-    minHeight: '460px',
     padding: '0',
     backgroundImage:
       'url("https://oboimir.ru/upload/iblock/740/7405cf527937cc3325971c2781a2eff0.jpg")',
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     height: '48px',
   },
   form: {
-    margin: '65px 50px',
+    margin: '35px 50px 65px 50px',
     height: 'auto',
     display: 'flex',
     flexDirection: 'column',

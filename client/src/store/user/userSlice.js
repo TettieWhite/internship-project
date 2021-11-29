@@ -76,4 +76,14 @@ export function fetchUserData() {
   };
 }
 
+export function loginUser(userData) {
+  return async (dispatch) => {
+    const response = await requestApi('/user/login', 'POST', userData);
+    if (!response.error) {
+      localStorage.setItem('token', response.data);
+      dispatch(fetchUserData);
+    }
+  };
+}
+
 export default userSlice.reducer;

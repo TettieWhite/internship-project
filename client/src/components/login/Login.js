@@ -3,15 +3,15 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
-import React from 'react';
+import React, { useState } from 'react';
 import useStyles from './LoginStyles';
-import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
+import LoginContainer from './LoginContainer';
+import RegisterContainer from './RegisterContainer';
 
 export default function Login(props) {
   const classes = useStyles();
 
-  const [isLoginOpened, showLoginForm] = React.useState(true);
+  const [isLoginOpened, showLoginForm] = useState(true);
   const showLogin = () => {
     showLoginForm(true);
   };
@@ -41,7 +41,11 @@ export default function Login(props) {
             <CloseRoundedIcon className={classes.close} />
           </IconButton>
         </Box>
-        {isLoginOpened ? <LoginForm /> : <RegisterForm />}
+        {isLoginOpened ? (
+          <LoginContainer onClose={props.onClose} />
+        ) : (
+          <RegisterContainer showLogin={showLogin} />
+        )}
       </Container>
     </Box>
   );
