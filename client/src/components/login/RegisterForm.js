@@ -1,6 +1,7 @@
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import React from 'react';
+import PropTypes from 'prop-types';
 import useStyles from './LoginStyles';
 
 export default function RegisterForm(props) {
@@ -14,8 +15,8 @@ export default function RegisterForm(props) {
         variant='outlined'
         label='Email'
         className={classes.input}
-        value={props.login}
-        onChange={props.handleLoginChange}
+        value={props.email}
+        onChange={props.handleEmailChange}
       />
       <TextField
         required
@@ -53,9 +54,23 @@ export default function RegisterForm(props) {
         value={props.lastName}
         onChange={props.handleLastNameChange}
       />
-      <Button type='submit' className={classes.submitBtn} variant='filled'>
+      <Button type='submit' className={classes.submitBtn} variant='contained'>
         Sign up
       </Button>
     </form>
   );
 }
+
+RegisterForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  email: PropTypes.string.isRequired,
+  handleEmailChange: PropTypes.func.isRequired,
+  password: PropTypes.string.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
+  passwordConfirm: PropTypes.string.isRequired,
+  handleConfirmChange: PropTypes.func.isRequired,
+  firstName: PropTypes.string.isRequired,
+  handleFirstNameChange: PropTypes.func.isRequired,
+  lastName: PropTypes.string.isRequired,
+  handleLastNameChange: PropTypes.func.isRequired,
+};

@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import requestApi from '../../helpers/requestApi';
 import RegisterForm from './RegisterForm';
 
 export default function RegisterContainer(props) {
-  const [loginInputState, changeLogin] = useState('');
-  const handleLoginChange = (event) => {
-    changeLogin(event.target.value);
+  const [email, setEmail] = useState('');
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
   };
-  const [passwordInputState, changePassword] = useState('');
+  const [password, setPassword] = useState('');
   const handlePasswordChange = (event) => {
-    changePassword(event.target.value);
+    setPassword(event.target.value);
   };
-  const [confirmInputState, changeConfirm] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const handleConfirmChange = (event) => {
-    changeConfirm(event.target.value);
+    setPasswordConfirm(event.target.value);
   };
-  const [firstNameInputState, changeFirstName] = useState('');
+  const [firstName, setFirstName] = useState('');
   const handleFirstNameChange = (event) => {
-    changeFirstName(event.target.value);
+    setFirstName(event.target.value);
   };
-  const [lastNameInputState, changeLastName] = useState('');
+  const [lastName, setLastName] = useState('');
   const handleLastNameChange = (event) => {
-    changeLastName(event.target.value);
+    setLastName(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -29,30 +30,34 @@ export default function RegisterContainer(props) {
 
     localStorage.setItem('token', '');
     const response = requestApi('/user', 'POST', {
-      email: loginInputState,
-      password: passwordInputState,
-      passwordConfirm: confirmInputState,
-      firstName: firstNameInputState,
-      lastName: lastNameInputState,
+      email,
+      password,
+      passwordConfirm,
+      firstName,
+      lastName,
     });
     if (!response.error) {
-      props.showLogin();
+      props.showLoginForm();
     }
   };
 
   return (
     <RegisterForm
-      login={loginInputState}
-      handleLoginChange={handleLoginChange}
-      password={passwordInputState}
+      email={email}
+      handleEmailChange={handleEmailChange}
+      password={password}
       handlePasswordChange={handlePasswordChange}
       handleSubmit={handleSubmit}
-      passwordConfirm={confirmInputState}
+      passwordConfirm={passwordConfirm}
       handleConfirmChange={handleConfirmChange}
-      firstName={firstNameInputState}
+      firstName={firstName}
       handleFirstNameChange={handleFirstNameChange}
-      lastName={lastNameInputState}
+      lastName={lastName}
       handleLastNameChange={handleLastNameChange}
     />
   );
 }
+
+RegisterContainer.propTypes = {
+  showLoginForm: PropTypes.func.isRequired,
+};

@@ -12,14 +12,14 @@ import Login from './login/Login';
 export default function Header() {
   const classes = useStyles();
 
-  const [show, showModal] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(false);
   const handleOpen = () => {
-    showModal(true);
-    document.body.style.overflow = 'hidden';
+    setShowModal(true);
+    document.body.classList.add(classes.disable);
   };
   const handleClose = () => {
-    showModal(false);
-    document.body.removeAttribute('style');
+    setShowModal(false);
+    document.body.classList.remove(classes.disable);
   };
 
   return (
@@ -45,7 +45,7 @@ export default function Header() {
           >
             Sign in
           </Button>
-          <Login show={show} onClose={handleClose} />
+          <Login showModal={showModal} onClose={handleClose} />
         </Toolbar>
       </AppBar>
     </header>
