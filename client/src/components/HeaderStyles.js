@@ -1,6 +1,9 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
+  disable: {
+    overflow: 'hidden',
+  },
   header: {
     height: '80px',
     margin: '0px 80px',
