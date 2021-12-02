@@ -47,7 +47,7 @@ export const userActions = userSlice.actions;
 
 export function fetchUserData() {
   return async (dispatch) => {
-    const response = await requestApi('/user/me', 'POST');
+    const response = await requestApi('/auth/me', 'POST');
     if (!response.error) {
       dispatch(
         userActions.setAuth({
@@ -78,7 +78,7 @@ export function fetchUserData() {
 
 export function loginUser(userData) {
   return async (dispatch) => {
-    const response = await requestApi('/user/login', 'POST', userData);
+    const response = await requestApi('/auth/login', 'POST', userData);
     if (!response.error) {
       localStorage.setItem('token', response.data);
       dispatch(fetchUserData);

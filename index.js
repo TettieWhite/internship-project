@@ -5,25 +5,13 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const indexRouter = require('./routes/index');
-const countryRouter = require('./routes/country');
-const cityRouter = require('./routes/city');
-const actorRouter = require('./routes/actor');
-const directorRouter = require('./routes/director');
-const genreRouter = require('./routes/genre');
-const userRouter = require('./routes/user');
+const routes = require('./routes/index');
 const middleware = require('./middleware');
 
 app.use(middleware);
 app.use(express.json());
 
-app.use('/', indexRouter);
-app.use('/countries', countryRouter);
-app.use('/cities', cityRouter);
-app.use('/actors', actorRouter);
-app.use('/directors', directorRouter);
-app.use('/genres', genreRouter);
-app.use('/user', userRouter);
+app.use('/', routes);
 
 async function start() {
     try {
