@@ -15,7 +15,6 @@ router.use('/actors', actorRoutes);
 router.use('/directors', directorRoutes);
 router.use('/genres', genreRoutes);
 router.use('/user', userRoutes);
-router.use('/user', userRoutes);
 router.use('/auth', authRoutes);
 
 module.exports = router;

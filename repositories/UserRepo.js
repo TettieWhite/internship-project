@@ -1,5 +1,6 @@
 const UserModel = require('../models/User');
 const init = require('../models/init');
+const USER_ROLES = require('../constants/users');
 
 class UserRepo {
     async getAllUsers() {
@@ -10,7 +11,14 @@ class UserRepo {
         return UserModel.insertMany(init.users);
     }
 
-    async addUser(email, password, role, firstName, lastName, preferences) {
+    async addUser(
+        email,
+        password,
+        firstName,
+        lastName,
+        preferences,
+        role = USER_ROLES.CLIENT
+    ) {
         const user = new UserModel({
             email: email,
             password: password,

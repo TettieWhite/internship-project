@@ -1,6 +1,4 @@
-const USER_ROLES = {
+module.exports = {
     CLIENT: 'client',
     ADMIN: 'admin',
 };
-
-module.exports = { USER_ROLES };
